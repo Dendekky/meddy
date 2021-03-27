@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Head from 'next/head';
 import Link from 'next/link';
+import { fetchPosts } from '../redux/actions';
 import { useSelector } from 'react-redux';
 import { wrapper } from '../redux/store';
 import styles from '../styles/Home.module.css';

@@ -1,9 +1,13 @@
 import axios from 'axios';
 import Head from 'next/head';
 import Link from 'next/link';
+import { useSelector } from 'react-redux';
+import { wrapper } from '../redux/store';
 import styles from '../styles/Home.module.css';
 
-export default function Home({ posts }) {
+export default function Home() {
+  const { posts } = useSelector((state) => state);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -12,9 +16,7 @@ export default function Home({ posts }) {
       </Head>
 
       <main className={styles.main}>
-        <h1 className={styles.title}>
-          Welcome to Meddy Test!
-        </h1>
+        <h1 className={styles.title}>Welcome to Meddy Test!</h1>
 
         <div className={styles.grid}>
           {posts.map((post) => (
@@ -46,12 +48,17 @@ export default function Home({ posts }) {
   );
 }
 
-export async function getStaticProps() {
-  const res = await axios.get('https://jsonplaceholder.typicode.com/posts');
-  const posts = await res.data;
-  return {
-    props: {
-      posts,
-    },
-  };
-}
+export const getStaticProps = wrapper.getStaticProps(
+  async ({ store, req, res, ...etc }) => {
+    console.log('2. Page.getServerSideProps uses the store to dispatch things');
+    const response = await axios.get(
+      'https://jsonplaceholder.typicode.com/posts'
+    );
+    const posts = response.data;
+    store.dispatch({
+      type: 'SET_POSTS',
+      payload: posts,
+    });
+    // store.dispatch(fetchPosts());
+  }
+);
