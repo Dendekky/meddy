@@ -49,7 +49,7 @@ export default function Home() {
 }
 
 export const getStaticProps = wrapper.getStaticProps(
-  async ({ store, req, res, ...etc }) => {
+  async ({ store }) => {
     console.log('2. Page.getServerSideProps uses the store to dispatch things');
     const response = await axios.get(
       'https://jsonplaceholder.typicode.com/posts'
@@ -59,6 +59,5 @@ export const getStaticProps = wrapper.getStaticProps(
       type: 'SET_POSTS',
       payload: posts,
     });
-    // store.dispatch(fetchPosts());
   }
 );

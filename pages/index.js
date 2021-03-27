@@ -1,13 +1,12 @@
 import axios from 'axios';
 import Head from 'next/head';
 import Link from 'next/link';
-import { fetchPosts } from '../redux/actions';
 import { useSelector } from 'react-redux';
 import { wrapper } from '../redux/store';
 import styles from '../styles/Home.module.css';
 
 export const getServerSideProps = wrapper.getServerSideProps(
-  async ({ store, req, res, ...etc }) => {
+  async ({ store }) => {
     console.log('2. Page.getServerSideProps uses the store to dispatch things');
     const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
     const posts = response.data;
@@ -15,7 +14,6 @@ export const getServerSideProps = wrapper.getServerSideProps(
       type: 'SET_POSTS',
       payload: posts,
     });
-    // store.dispatch(fetchPosts());
   }
 );
 
