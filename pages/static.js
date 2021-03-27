@@ -46,7 +46,7 @@ export default function Home({ posts }) {
   );
 }
 
-export async function getServerSideProps() {
+export async function getStaticProps() {
   const res = await axios.get('https://jsonplaceholder.typicode.com/posts');
   const posts = await res.data;
   return {
