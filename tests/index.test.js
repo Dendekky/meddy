@@ -1,11 +1,21 @@
-import { render, screen } from "@testing-library/react";
-import App from "../pages/index";
+import { render, screen } from '@testing-library/react';
 
-describe("App", () => {
-  it("renders without crashing", () => {
-    render(<App />);
-    expect(
-      screen.getByRole("heading", { name: "Welcome to Next.js!" })
-    ).toBeInTheDocument();
+import { Provider } from 'react-redux';
+import configureStore from 'redux-mock-store';
+import App from '../pages/index';
+
+describe('App', () => {
+  const initialState = { posts: [] };
+  const mockStore = configureStore();
+  let store;
+
+  it('renders without crashing', () => {
+    store = mockStore(initialState);
+    render(
+      <Provider store={store}>
+        <App />
+      </Provider>
+    );
+    expect(screen.getByRole('heading', { name: 'Welcome to Meddy Test!' })).toBeInTheDocument();
   });
 });
