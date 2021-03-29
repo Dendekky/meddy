@@ -1,8 +1,12 @@
 import axios from 'axios';
 import Head from 'next/head';
+import { useSelector } from 'react-redux';
+import { wrapper } from '../../redux/store';
 import styles from '../../styles/Home.module.css';
 
-export default function Post({ post }) {
+export default function Post() {
+  const { post } = useSelector((state) => state);
+
   return (
     <div className={styles.container}>
       <Head>
@@ -17,14 +21,27 @@ export default function Post({ post }) {
   );
 }
 
-export async function getServerSideProps({ params: { id } }) {
-  const res = await axios.get(
-    `https://jsonplaceholder.typicode.com/posts/${id}`
-  );
-  const post = res.data;
-  return {
-    props: {
-      post,
-    },
-  };
-}
+// export async function getServerSideProps({ params: { id } }) {
+//   const res = await axios.get(
+//     `https://jsonplaceholder.typicode.com/posts/${id}`
+//   );
+//   const post = res.data;
+//   return {
+//     props: {
+//       post,
+//     },
+//   };
+// }
+
+export const getServerSideProps = wrapper.getServerSideProps(
+  async ({ store, req }) => {
+    console.log('2. Page.getServerSideProps uses the store to dispatch things');
+    const { id } = req.__NEXT_INIT_QUERY
+    const response = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
+    const post = response.data;
+    store.dispatch({
+      type: 'SET_POST',
+      payload: post,
+    });
+  }
+);
