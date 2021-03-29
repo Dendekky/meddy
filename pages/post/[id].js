@@ -1,12 +1,16 @@
 import axios from 'axios';
 import Head from 'next/head';
+import Error from 'next/error';
 import { useSelector } from 'react-redux';
 import { wrapper } from '../../redux/store';
 import styles from '../../styles/Home.module.css';
 
 export default function Post() {
-  const { post } = useSelector((state) => state);
+  const { post, errorCode } = useSelector((state) => state);
 
+  if (errorCode) {
+    return <Error statusCode={errorCode} />;
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -23,12 +27,21 @@ export default function Post() {
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ store, req }) => {
-    const { id } = req.__NEXT_INIT_QUERY
-    const response = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
+    const { id } = req.__NEXT_INIT_QUERY;
+    const response = await axios.get(
+      `https://jsonplaceholder.typicode.com/posts/${id}`
+    );
     const post = response.data;
-    store.dispatch({
-      type: 'SET_POST',
-      payload: post,
-    });
+    if (post) {
+      store.dispatch({
+        type: 'SET_POST',
+        payload: post,
+      });
+    } else {
+      store.dispatch({
+        type: 'SET_ERROR',
+        payload: 500,
+      });
+    }
   }
 );

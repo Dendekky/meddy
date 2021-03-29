@@ -1,23 +1,37 @@
 import axios from 'axios';
 import Head from 'next/head';
 import Link from 'next/link';
+import Error from 'next/error';
 import { useSelector } from 'react-redux';
 import { wrapper } from '../redux/store';
 import styles from '../styles/Home.module.css';
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ store }) => {
-    const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+    const response = await axios.get(
+      'https://jsonplaceholder.typicode.com/posts'
+    );
     const posts = response.data;
-    store.dispatch({
-      type: 'SET_POSTS',
-      payload: posts,
-    });
+    if (posts) {
+      store.dispatch({
+        type: 'SET_POSTS',
+        payload: posts,
+      });
+    } else {
+      store.dispatch({
+        type: 'SET_ERROR',
+        payload: 500,
+      });
+    }
   }
 );
 
 const Home = () => {
-  const { posts } = useSelector((state) => state);
+  const { posts, errorCode } = useSelector((state) => state);
+
+  if (errorCode) {
+    return <Error statusCode={errorCode} />;
+  }
   return (
     <div className={styles.container}>
       <Head>
@@ -56,6 +70,5 @@ const Home = () => {
     </div>
   );
 };
-
 
 export default Home;

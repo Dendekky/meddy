@@ -1,8 +1,9 @@
-import {HYDRATE} from 'next-redux-wrapper';
+import { HYDRATE } from 'next-redux-wrapper';
 
 const initialState = {
   posts: [],
   post: {},
+  errorCode: '',
 };
 
 export default function reducer(state = initialState, action) {
@@ -10,11 +11,11 @@ export default function reducer(state = initialState, action) {
     case HYDRATE:
       return { ...state, ...action.payload };
     case 'SET_POSTS':
-    //   console.log(action.payload);
       return { ...state, posts: action.payload };
     case 'SET_POST':
-      console.log(action.payload);
       return { ...state, post: action.payload };
+    case 'SET_ERROR':
+      return { ...state, errorCode: action.payload };
     default:
       return state;
   }
