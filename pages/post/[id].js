@@ -21,21 +21,8 @@ export default function Post() {
   );
 }
 
-// export async function getServerSideProps({ params: { id } }) {
-//   const res = await axios.get(
-//     `https://jsonplaceholder.typicode.com/posts/${id}`
-//   );
-//   const post = res.data;
-//   return {
-//     props: {
-//       post,
-//     },
-//   };
-// }
-
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ store, req }) => {
-    console.log('2. Page.getServerSideProps uses the store to dispatch things');
     const { id } = req.__NEXT_INIT_QUERY
     const response = await axios.get(`https://jsonplaceholder.typicode.com/posts/${id}`);
     const post = response.data;

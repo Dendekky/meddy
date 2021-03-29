@@ -7,7 +7,6 @@ import styles from '../styles/Home.module.css';
 
 export const getServerSideProps = wrapper.getServerSideProps(
   async ({ store }) => {
-    console.log('2. Page.getServerSideProps uses the store to dispatch things');
     const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
     const posts = response.data;
     store.dispatch({
@@ -58,14 +57,5 @@ const Home = () => {
   );
 };
 
-// export async function getServerSideProps() {
-//   const res = await axios.get('https://jsonplaceholder.typicode.com/posts');
-//   const posts = await res.data;
-//   return {
-//     props: {
-//       posts,
-//     },
-//   };
-// }
 
 export default Home;
